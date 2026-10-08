@@ -38,7 +38,7 @@ function PortalMock() {
           <li><Icon name="smartphone" size={16} /> Chamado respondido pelo seu gestor <b>2 min</b></li>
         </ul>
       </div>
-      <div className="mock__float mock__float--a"><Icon name="landmark" size={18} /> Conta digital <b>Grátis</b></div>
+      <div className="mock__float mock__float--a"><Icon name="file-text" size={18} /> Obrigações <b>Em dia</b></div>
       <div className="mock__float mock__float--b"><Icon name="shield-check" size={18} /> Conformidade <b>100%</b></div>
       <p className="mock__note">Prévia ilustrativa da plataforma</p>
     </div>
@@ -60,7 +60,7 @@ export function Hero() {
           </h1>
           <p className="hero__lead">
             O ecossistema completo para o crescimento do seu negócio: contabilidade, finanças,
-            pessoal, crédito e banco digital — 100% digital e com gestor de conta dedicado.
+            pessoal e crédito — 100% digital e com gestor de conta dedicado.
           </p>
           <div className="hero__cta">
             <a href="#contato" className="btn btn--primary btn--lg">
@@ -71,7 +71,7 @@ export function Hero() {
           <ul className="hero__proof">
             <li><Icon name="check" size={16} /> Sem papel, sem burocracia</li>
             <li><Icon name="check" size={16} /> Migração assistida</li>
-            <li><Icon name="check" size={16} /> Conta digital gratuita</li>
+            <li><Icon name="check" size={16} /> Gestor de conta dedicado</li>
           </ul>
         </div>
         <PortalMock />

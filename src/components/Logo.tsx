@@ -9,12 +9,8 @@ export function LogoMark({ size = 36 }: { size?: number }) {
 
 export function Logo({ light = false }: { light?: boolean }) {
   return (
-    <a href="#topo" className={`logo ${light ? 'logo--light' : ''}`} aria-label="Conceito Business — início">
-      <LogoMark />
-      <span className="logo__text">
-        <strong>CONCEITO</strong>
-        <small>BUSINESS</small>
-      </span>
+    <a href="#topo" className="logo" aria-label="Conceito Business — início">
+      <img src={light ? '/logos/logo-01.png' : '/logos/logo-02.png'} alt="Conceito Business" height={40} />
     </a>
   )
 }

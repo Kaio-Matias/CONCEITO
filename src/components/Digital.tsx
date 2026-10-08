@@ -20,7 +20,7 @@ function Phone() {
           <div><Icon name="file-text" size={18} /><span>Enviar documento</span></div>
           <div><Icon name="whatsapp" size={18} /><span>Abrir chamado</span></div>
           <div><Icon name="bar-chart" size={18} /><span>Relatórios</span></div>
-          <div><Icon name="landmark" size={18} /><span>Conta digital</span></div>
+          <div><Icon name="shield-check" size={18} /><span>Certificados</span></div>
         </div>
         <div className="phone__ticket">
           <i /> Chamado #— em andamento

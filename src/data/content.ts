@@ -6,6 +6,11 @@ export const COMPANY = {
   email: 'contato@conceitonegocos.com.br',
   instagram: '@conceitonegocios',
   instagramUrl: 'https://instagram.com/conceitonegocios',
+  legalName: 'Conceito Contabilidade e Negócios LTDA',
+  cnpj: '36.426.347/0001-48',
+  crc: 'CRC-AL 008526/O-2',
+  address: 'Rua Mariano de Freitas, 85, Sala 3 · São Cristóvão',
+  city: 'Palmeira dos Índios/AL · CEP 57.601-070',
 }
 
 export const NAV = [
@@ -34,7 +39,6 @@ export const SERVICES = [
   { icon: 'bar-chart', title: 'Controladoria', text: 'Planejamento financeiro, análise de custos e indicadores de desempenho.' },
   { icon: 'wallet', title: 'BPO Financeiro', text: 'Gestão completa do contas a pagar e receber, conciliação bancária.' },
   { icon: 'users', title: 'Departamento Pessoal', text: 'Folha de pagamento, admissões, demissões e compliance trabalhista.' },
-  { icon: 'landmark', title: 'Banco Digital', text: 'Conta digital gratuita integrada ao ecossistema financeiro da empresa.' },
   { icon: 'hand-coins', title: 'Crédito & Cobrança', text: 'Acesso a linhas de crédito e gestão profissional da inadimplência.' },
   { icon: 'shield-check', title: 'Certificação Digital', text: 'Emissão e renovação de certificados e-CPF e e-CNPJ.' },
   { icon: 'badge', title: 'Registro de Marcas', text: 'Proteção da identidade da sua empresa junto ao INPI.' },
@@ -77,7 +81,6 @@ export const PLANS = {
     { label: 'Contabilidade', values: [true, true, true] },
     { label: 'BPO Financeiro', values: [false, true, true] },
     { label: 'Controladoria', values: [false, false, true] },
-    { label: 'Banco Digital', values: ['Grátis', 'Grátis', 'Grátis'] },
   ] as { label: string; values: (boolean | string)[] }[],
 }
 
@@ -86,7 +89,7 @@ export const FAQ = [
   { q: 'Posso trocar de contador sem dor de cabeça?', a: 'Sim. Nosso onboarding digital cuida da migração com suporte completo da equipe, de forma ágil e sem burocracia.' },
   { q: 'Preciso instalar algum sistema?', a: 'Não. Você acessa tudo pelo app exclusivo ou pelo portal web, direto do navegador, a qualquer hora.' },
   { q: 'Os planos servem para o meu porte de empresa?', a: 'Temos planos flexíveis do MEI ao empresário consolidado. Cada cliente recebe exatamente o que precisa, sem pagar por serviços que não utiliza.' },
-  { q: 'Vocês atendem só contabilidade?', a: 'Não. Somos um ecossistema: contabilidade, controladoria, BPO financeiro, DP, banco digital, crédito e cobrança, certificação digital e registro de marcas.' },
+  { q: 'Vocês atendem só contabilidade?', a: 'Não. Somos um ecossistema: contabilidade, controladoria, BPO financeiro, DP, crédito e cobrança, certificação digital e registro de marcas.' },
   { q: 'Terei um contato direto na equipe?', a: 'Sim. Você conta com atendimento personalizado e gestor de conta dedicado, além de relatórios claros e comunicação direta e honesta.' },
 ]
 
@@ -97,12 +100,21 @@ export const SEGMENTS = ['MEI', 'Comércio', 'Serviços', 'Indústria', 'Saúde'
  * Troque pelos dados reais (ou pela resposta da API) antes de publicar.
  * Em `photo` use um arquivo em /public (ex.: '/equipe/ana.jpg'); sem foto, mostra as iniciais.
  */
-export interface Member { area: string; role: string; icon: string; name?: string; title?: string; photo?: string; crc?: string }
+export interface Member {
+  tier: number // 0 = CEO (frente), 1 = sócios, 2+ = demais colaboradores (cada nível fica mais ao fundo)
+  name: string; title: string; area: string; about: string
+  photo?: string; crc?: string
+}
 export const MEMBERS: Member[] = [
-  { area: 'Contabilidade', role: 'Escrituração, obrigações fiscais e planejamento tributário.', icon: 'file-text', name: 'Mariana Albuquerque', title: 'Contadora responsável', crc: 'CRC-AL 000000/O' },
-  { area: 'Controladoria & BPO', role: 'Indicadores, fluxo de caixa e gestão financeira.', icon: 'bar-chart', name: 'Rafael Tavares', title: 'Gerente financeiro', crc: 'CRC-AL 000000/O' },
-  { area: 'Departamento Pessoal', role: 'Folha, admissões e compliance trabalhista.', icon: 'users', name: 'Camila Duarte', title: 'Coordenadora de DP' },
-  { area: 'Gestão de contas', role: 'Seu gestor dedicado: relatórios claros e comunicação direta.', icon: 'whatsapp', name: 'Lucas Ferreira', title: 'Gestor de contas' },
+  { tier: 0, name: 'Victor Ferreira da Silva', title: 'CEO e sócio-administrador', area: 'Direção', crc: 'CRC-AL 008526/O-2', photo: '/equipe/victor.webp', about: 'Fundador e dono da Conceito. Define a visão do escritório, cuida das parcerias estratégicas e acompanha de perto os clientes, garantindo que contabilidade e gestão andem juntas.' },
+  { tier: 1, name: 'Davi Lima da Silva', title: 'Sócio-administrador', area: 'Sociedade', about: 'Sócio-administrador da Conceito, atuando na gestão do escritório e no relacionamento com os clientes.' },
+  { tier: 1, name: 'Ailton Leonardo de Melo Neto', title: 'Sócio-administrador', area: 'Sociedade', about: 'Sócio-administrador da Conceito, atuando na gestão do escritório e no desenvolvimento dos serviços.' },
+  { tier: 2, name: 'Mariana Albuquerque', title: 'Contadora responsável', area: 'Contabilidade', crc: 'CRC-AL 000000/O', about: 'Lidera escrituração, obrigações fiscais e planejamento tributário.' },
+  { tier: 2, name: 'Rafael Tavares', title: 'Gerente financeiro', area: 'Controladoria & BPO', crc: 'CRC-AL 000000/O', about: 'Cuida de indicadores, fluxo de caixa e gestão financeira terceirizada.' },
+  { tier: 2, name: 'Camila Duarte', title: 'Coordenadora de DP', area: 'Departamento Pessoal', about: 'Folha de pagamento, admissões, rescisões e compliance trabalhista, sempre dentro do prazo.' },
+  { tier: 2, name: 'Lucas Ferreira', title: 'Gestor de contas', area: 'Gestão de contas', about: 'Seu gestor dedicado: relatórios claros, avisos de prazo e comunicação direta pelo WhatsApp.' },
+  { tier: 3, name: 'Larissa Costa', title: 'Assistente contábil', area: 'Contabilidade', about: 'Conciliações, lançamentos e organização dos documentos enviados pelos clientes.' },
+  { tier: 3, name: 'Pedro Alves', title: 'Assistente de DP', area: 'Departamento Pessoal', about: 'Apoio na folha, ponto, férias e benefícios dos colaboradores dos clientes.' },
 ]
 
 /** Depoimentos aprovados para exibição pública (com autorização do cliente). */

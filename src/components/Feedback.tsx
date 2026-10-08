@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { TESTIMONIALS } from '../data/content'
 import { submitFeedback } from '../services/feedback'
 import { Icon } from './Icon'
@@ -12,6 +12,95 @@ function Stars({ value }: { value: number }) {
     <span className="stars" role="img" aria-label={`${value} de 5 estrelas`}>
       {[1, 2, 3, 4, 5].map((n) => <Icon key={n} name="star" size={16} className={n <= value ? 'on' : ''} />)}
     </span>
+  )
+}
+
+const AUTOPLAY_MS = 6500
+
+function Carousel() {
+  const n = TESTIMONIALS.length
+  const [idx, setIdx] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const drag = useRef<number | null>(null)
+  const go = (d: number) => setIdx((i) => (i + d + n) % n)
+
+  useEffect(() => {
+    if (paused || n < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const t = setTimeout(() => setIdx((i) => (i + 1) % n), AUTOPLAY_MS)
+    return () => clearTimeout(t)
+  }, [idx, paused, n])
+
+  const half = Math.floor(n / 2)
+  return (
+    <div
+      className="car"
+      role="region"
+      aria-roledescription="carrossel"
+      aria-label="Depoimentos de clientes"
+      tabIndex={0}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocus={() => setPaused(true)}
+      onBlur={() => setPaused(false)}
+      onKeyDown={(e) => { if (e.key === 'ArrowRight') go(1); if (e.key === 'ArrowLeft') go(-1) }}
+    >
+      <span className="car__mark" aria-hidden="true">“</span>
+      <div
+        className="car__stage"
+        onPointerDown={(e) => { drag.current = e.clientX }}
+        onPointerUp={(e) => {
+          if (drag.current === null) return
+          const dx = e.clientX - drag.current
+          drag.current = null
+          if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1)
+        }}
+        onPointerCancel={() => { drag.current = null }}
+      >
+        {TESTIMONIALS.map((t, i) => {
+          const off = ((i - idx + n + half) % n) - half
+          const a = Math.abs(off)
+          const active = off === 0
+          return (
+            <figure
+              key={t.name}
+              className={`car__card ${active ? 'is-active' : ''}`}
+              aria-hidden={!active}
+              style={{
+                transform: `translateX(${off * 56}%) scale(${1 - a * 0.13}) rotateY(${off * -10}deg)`,
+                opacity: a > 1 ? 0 : 1 - a * 0.5,
+                zIndex: 10 - a,
+                filter: a ? `blur(${a * 1.5}px)` : 'none',
+                pointerEvents: a > 1 ? 'none' : 'auto',
+              }}
+              onClick={() => { if (!active) setIdx(i) }}
+            >
+              <div className="wall__top">
+                <Stars value={t.rating} />
+                {t.result && <em>{t.result}</em>}
+              </div>
+              <blockquote>{t.text}</blockquote>
+              <figcaption>
+                <span className="wall__av">{initials(t.name)}</span>
+                <div><strong>{t.name}</strong><span>{t.role} · {t.company}</span></div>
+              </figcaption>
+            </figure>
+          )
+        })}
+      </div>
+      {n > 1 && (
+        <div className="car__ctrl">
+          <button type="button" onClick={() => go(-1)} aria-label="Depoimento anterior" className="car__btn car__btn--prev"><Icon name="arrow" size={18} /></button>
+          <div className="car__dots">
+            {TESTIMONIALS.map((t, i) => (
+              <button key={t.name} type="button" aria-label={`Ir para o depoimento de ${t.name}`} aria-current={i === idx} className={i === idx ? 'on' : ''} onClick={() => setIdx(i)}>
+                {i === idx && <i key={idx} className={paused ? 'is-paused' : ''} style={{ animationDuration: `${AUTOPLAY_MS}ms` }} />}
+              </button>
+            ))}
+          </div>
+          <button type="button" onClick={() => go(1)} aria-label="Próximo depoimento" className="car__btn"><Icon name="arrow" size={18} /></button>
+        </div>
+      )}
+    </div>
   )
 }
 
@@ -50,29 +139,15 @@ export function Feedback() {
         </div>
 
         <div className="feedback__grid">
-          <div className="wall">
-            {TESTIMONIALS.length ? (
-              TESTIMONIALS.map((t) => (
-                <figure key={t.name}>
-                  <div className="wall__top">
-                    <Stars value={t.rating} />
-                    {t.result && <em>{t.result}</em>}
-                  </div>
-                  <blockquote>“{t.text}”</blockquote>
-                  <figcaption>
-                    <span className="wall__av">{initials(t.name)}</span>
-                    <div><strong>{t.name}</strong><span>{t.role} · {t.company}</span></div>
-                  </figcaption>
-                </figure>
-              ))
-            ) : (
+          {TESTIMONIALS.length ? <Carousel /> : (
+            <div className="wall">
               <div className="wall__empty">
                 <span><Icon name="quote" size={28} /></span>
                 <h3>O mural de depoimentos é construído por clientes</h3>
                 <p>Os feedbacks autorizados para publicação aparecem aqui, com nome e empresa. Seja um dos primeiros a contar sua experiência.</p>
               </div>
-            )}
-          </div>
+            </div>
+          )}
 
           <form className="form fbform" onSubmit={onSubmit}>
             <fieldset>
