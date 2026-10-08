@@ -36,8 +36,8 @@ export function Footer() {
         </div>
       </footer>
       <a className="fab" href={whatsappUrl('Olá! Vim pelo site da Conceito Business e gostaria de falar com um especialista.')} target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
-        <Icon name="whatsapp" size={26} />
-        <span>Fale com um especialista</span>
+        <span className="fab__icon"><Icon name="whatsapp" size={28} /></span>
+        <span className="fab__label"><small>Online agora</small>Fale com um especialista</span>
       </a>
     </>
   )
