@@ -16,7 +16,7 @@ export function Simulator() {
   const saving = yearlyTax * 0.25
   const hoursFreed = Math.round(hours * 4 * 0.4)
 
-  const msg = `Olá! Fiz a simulação no site da Conceito Business (faturamento mensal ${brl(revenue)}, carga tributária ${burden}%, ${hours}h/semana em rotinas administrativas) e quero conversar sobre o diagnóstico gratuito.`
+  const msg = `Olá! Fiz a simulação no site da Conceito Business (faturamento mensal ${brl(revenue)}, carga tributária ${burden}%, ${hours}h/semana em rotinas administrativas) e quero conversar com um especialista.`
 
   return (
     <section className={`section simulator reveal ${seen ? 'is-in' : ''}`} ref={ref}>
@@ -53,7 +53,7 @@ export function Simulator() {
             <a className="btn btn--primary" href={whatsappUrl(msg)} target="_blank" rel="noopener noreferrer">
               <Icon name="whatsapp" size={18} /> Validar com um especialista
             </a>
-            <p>Estimativa ilustrativa baseada nos resultados de referência da Conceito (até 25% de economia tributária e 40% de redução de tempo). O valor real depende do regime e da operação — confirmamos no diagnóstico gratuito.</p>
+            <p>Estimativa ilustrativa baseada nos resultados de referência da Conceito (até 25% de economia tributária e 40% de redução de tempo). O valor real depende do regime e da operação — confirmamos em uma conversa com nossa equipe.</p>
           </div>
         </div>
       </div>

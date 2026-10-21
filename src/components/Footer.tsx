@@ -1,8 +1,7 @@
-import { Link } from 'react-router-dom'
+import { goClient } from '../services/clientArea'
 import { COMPANY, NAV } from '../data/content'
-import { Icon } from './Icon'
 import { Logo } from './Logo'
-import { whatsappUrl } from '../services/leads'
+import { FloatingWhatsApp } from './FloatingWhatsApp'
 
 export function Footer() {
   return (
@@ -24,7 +23,7 @@ export function Footer() {
             {NAV.map((n) => <a key={n.href} href={n.href}>{n.label}</a>)}
           </nav>
           <div className="footer__contact">
-            <Link to="/cliente">Área do cliente</Link>
+            <a href="/cliente" onClick={goClient}>Área do cliente</a>
             <a href="#feedback">Deixe seu feedback</a>
             <a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a>
             <a href={COMPANY.instagramUrl} target="_blank" rel="noopener noreferrer">{COMPANY.instagram}</a>
@@ -35,10 +34,7 @@ export function Footer() {
           <span className="footer__dev">Desenvolvido por Kaio Matias Melo</span>
         </div>
       </footer>
-      <a className="fab" href={whatsappUrl('Olá! Vim pelo site da Conceito Business e gostaria de falar com um especialista.')} target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
-        <span className="fab__icon"><Icon name="whatsapp" size={28} /></span>
-        <span className="fab__label"><small>Online agora</small>Fale com um especialista</span>
-      </a>
+      <FloatingWhatsApp />
     </>
   )
 }

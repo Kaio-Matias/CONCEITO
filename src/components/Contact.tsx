@@ -60,7 +60,7 @@ export function Contact() {
           <div className="form__head">
             <LogoMark size={40} />
             <div>
-              <strong>Diagnóstico gratuito</strong>
+              <strong>Solicite uma proposta</strong>
               <small>Leva menos de 1 minuto</small>
             </div>
           </div>

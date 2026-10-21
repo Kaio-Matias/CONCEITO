@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { goClient } from '../services/clientArea'
 import { NAV } from '../data/content'
 import { Icon } from './Icon'
 import { Logo } from './Logo'
@@ -30,11 +30,8 @@ export function Header() {
           ))}
         </nav>
         <div className="header__actions">
-          <Link to="/cliente" className="btn btn--ghost btn--sm">
+          <a href="/cliente" className="btn btn--ghost btn--sm" onClick={goClient}>
             <Icon name="login" size={16} /> Área do cliente
-          </Link>
-          <a href="#contato" className="btn btn--primary btn--sm" onClick={() => setOpen(false)}>
-            Diagnóstico gratuito
           </a>
         </div>
         <button className="header__burger" aria-label={open ? 'Fechar menu' : 'Abrir menu'} aria-expanded={open} onClick={() => setOpen(!open)}>
@@ -45,10 +42,9 @@ export function Header() {
         {NAV.map((n) => (
           <a key={n.href} href={n.href} onClick={() => setOpen(false)}>{n.label}</a>
         ))}
-        <Link to="/cliente" className="btn btn--ghost" onClick={() => setOpen(false)}>
+        <a href="/cliente" className="btn btn--ghost" onClick={(e) => { setOpen(false); goClient(e) }}>
           <Icon name="login" size={16} /> Área do cliente
-        </Link>
-        <a href="#contato" className="btn btn--primary" onClick={() => setOpen(false)}>Diagnóstico gratuito</a>
+        </a>
       </div>
     </header>
   )

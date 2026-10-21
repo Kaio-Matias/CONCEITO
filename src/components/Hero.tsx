@@ -64,7 +64,7 @@ export function Hero() {
           </p>
           <div className="hero__cta">
             <a href="#contato" className="btn btn--primary btn--lg">
-              Quero meu diagnóstico gratuito <Icon name="arrow" size={18} />
+              Fale com nossa equipe <Icon name="arrow" size={18} />
             </a>
             <a href="#solucoes" className="btn btn--outline btn--lg">Conhecer as soluções</a>
           </div>

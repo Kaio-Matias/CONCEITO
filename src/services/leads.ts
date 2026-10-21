@@ -18,7 +18,7 @@ export function whatsappUrl(message: string) {
  */
 export async function submitLead(lead: Lead) {
   const msg = [
-    'Olá! Vim pelo site da Conceito Business e quero um diagnóstico gratuito.',
+    'Olá! Vim pelo site da Conceito Business e gostaria de uma proposta.',
     `Nome: ${lead.name}`,
     lead.company ? `Empresa: ${lead.company}` : '',
     `Preciso de: ${lead.need}`,

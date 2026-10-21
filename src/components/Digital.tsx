@@ -1,30 +1,60 @@
+import { useEffect, useState } from 'react'
 import { DIGITAL_FEATURES } from '../data/content'
+import { CLIENT_APP } from '../services/clientArea'
 import { Icon } from './Icon'
 import { useInView } from '../hooks/useReveal'
 
-function Phone() {
+const SHOTS = [
+  { src: '/app/tela-1.webp', alt: 'Tela inicial do app Conceito Negócios com faturamento e atalhos' },
+  { src: '/app/tela-2.webp', alt: 'Guias pendentes com valores e vencimentos' },
+  { src: '/app/tela-3.webp', alt: 'Central de documentos compartilhados com a contabilidade' },
+  { src: '/app/tela-4.webp', alt: 'Chat direto com a contabilidade' },
+  { src: '/app/tela-5.webp', alt: 'Acompanhamento de processos e guias' },
+  { src: '/app/tela-6.webp', alt: 'Notificações e comunicados fiscais' },
+  { src: '/app/tela-7.webp', alt: 'Central de arquivos XML com indicadores' },
+]
+
+/** Telas reais do app (as mesmas publicadas na Play Store e App Store). */
+function AppShots() {
+  const [i, setI] = useState(0)
+  const [paused, setPaused] = useState(false)
+  const n = SHOTS.length
+
+  useEffect(() => {
+    if (paused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const t = setInterval(() => setI((v) => (v + 1) % n), 3800)
+    return () => clearInterval(t)
+  }, [paused, n])
+
   return (
-    <div className="phone" aria-hidden="true">
-      <div className="phone__notch" />
-      <div className="phone__screen">
-        <div className="phone__top">
-          <small>Olá, bem-vindo 👋</small>
-          <strong>Sua empresa hoje</strong>
+    <div className="shots" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
+      <div className="shots__stage">
+        {SHOTS.map((s, k) => {
+          const off = ((k - i + n) % n)
+          const pos = off === 0 ? 'is-active' : off === 1 ? 'is-next' : off === n - 1 ? 'is-prev' : 'is-hidden'
+          return (
+            <img
+              key={s.src}
+              src={s.src}
+              alt={s.alt}
+              className={`shots__img ${pos}`}
+              loading={k < 2 ? 'eager' : 'lazy'}
+              width={720}
+              height={1558}
+              onClick={() => setI(k)}
+              aria-hidden={off !== 0}
+            />
+          )
+        })}
+      </div>
+      <div className="shots__nav">
+        <button type="button" aria-label="Tela anterior" onClick={() => setI((v) => (v - 1 + n) % n)}><Icon name="arrow" size={16} /></button>
+        <div className="shots__dots">
+          {SHOTS.map((s, k) => (
+            <button key={s.src} type="button" aria-label={`Ver tela ${k + 1}`} aria-current={k === i} className={k === i ? 'is-on' : ''} onClick={() => setI(k)} />
+          ))}
         </div>
-        <div className="phone__card">
-          <small>Status das obrigações</small>
-          <strong>Tudo em dia</strong>
-          <div className="phone__progress"><span /></div>
-        </div>
-        <div className="phone__tiles">
-          <div><Icon name="file-text" size={18} /><span>Enviar documento</span></div>
-          <div><Icon name="whatsapp" size={18} /><span>Abrir chamado</span></div>
-          <div><Icon name="bar-chart" size={18} /><span>Relatórios</span></div>
-          <div><Icon name="shield-check" size={18} /><span>Certificados</span></div>
-        </div>
-        <div className="phone__ticket">
-          <i /> Chamado #— em andamento
-        </div>
+        <button type="button" aria-label="Próxima tela" onClick={() => setI((v) => (v + 1) % n)}><Icon name="arrow" size={16} /></button>
       </div>
     </div>
   )
@@ -37,7 +67,7 @@ export function Digital() {
       <div className="container digital__grid">
         <div className="digital__visual">
           <span className="digital__glow" aria-hidden="true" />
-          <Phone />
+          <AppShots />
         </div>
         <div>
           <p className="eyebrow"><span /> 100% digital</p>
@@ -58,6 +88,20 @@ export function Digital() {
               </li>
             ))}
           </ul>
+          <div className="stores">
+            <a className="stores__btn" href={CLIENT_APP.playStore} target="_blank" rel="noopener noreferrer">
+              <img src="/app/icone.png" alt="" width={28} height={28} />
+              <span><small>Disponível no</small>Google Play</span>
+            </a>
+            <a className="stores__btn" href={CLIENT_APP.appStore} target="_blank" rel="noopener noreferrer">
+              <img src="/app/icone.png" alt="" width={28} height={28} />
+              <span><small>Baixar na</small>App Store</span>
+            </a>
+            <a className="stores__btn stores__btn--web" href={CLIENT_APP.portal} target="_blank" rel="noopener noreferrer">
+              <Icon name="monitor" size={22} />
+              <span><small>Acesse pelo</small>Portal web</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>

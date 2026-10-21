@@ -65,7 +65,7 @@ export const TEAM_POINTS = [
 ]
 
 export const STEPS = [
-  { n: '01', title: 'Diagnóstico gratuito', text: 'Analisamos a situação atual da sua empresa e identificamos oportunidades de melhoria.' },
+  { n: '01', title: 'Primeira conversa', text: 'Entendemos a situação atual da sua empresa e identificamos oportunidades de melhoria.' },
   { n: '02', title: 'Proposta personalizada', text: 'Montamos um pacote de serviços adaptado à fase e às necessidades do seu negócio.' },
   { n: '03', title: 'Onboarding digital', text: 'Migração ágil e sem dor de cabeça, com suporte completo da nossa equipe.' },
   { n: '04', title: 'Acompanhamento contínuo', text: 'Relatórios mensais, reuniões estratégicas e suporte proativo via app e web.' },
@@ -85,7 +85,6 @@ export const PLANS = {
 }
 
 export const FAQ = [
-  { q: 'Como funciona o diagnóstico gratuito?', a: 'Conversamos sobre a situação atual da sua empresa, analisamos regime tributário, rotinas e pontos de atenção e apresentamos oportunidades de melhoria — sem compromisso.' },
   { q: 'Posso trocar de contador sem dor de cabeça?', a: 'Sim. Nosso onboarding digital cuida da migração com suporte completo da equipe, de forma ágil e sem burocracia.' },
   { q: 'Preciso instalar algum sistema?', a: 'Não. Você acessa tudo pelo app exclusivo ou pelo portal web, direto do navegador, a qualquer hora.' },
   { q: 'Os planos servem para o meu porte de empresa?', a: 'Temos planos flexíveis do MEI ao empresário consolidado. Cada cliente recebe exatamente o que precisa, sem pagar por serviços que não utiliza.' },
@@ -96,8 +95,7 @@ export const FAQ = [
 export const SEGMENTS = ['MEI', 'Comércio', 'Serviços', 'Indústria', 'Saúde', 'Tecnologia', 'E-commerce', 'Profissionais liberais']
 
 /**
- * ⚠️ MOCK — pessoas, CRCs e depoimentos abaixo são FICTÍCIOS, só para demonstração no front.
- * Troque pelos dados reais (ou pela resposta da API) antes de publicar.
+ * Equipe real da Conceito. ⚠️ Os depoimentos mais abaixo ainda são FICTÍCIOS (demonstração).
  * Em `photo` use um arquivo em /public (ex.: '/equipe/ana.jpg'); sem foto, mostra as iniciais.
  */
 export interface Member {
@@ -107,14 +105,11 @@ export interface Member {
 }
 export const MEMBERS: Member[] = [
   { tier: 0, name: 'Victor Ferreira da Silva', title: 'CEO e sócio-administrador', area: 'Direção', crc: 'CRC-AL 008526/O-2', photo: '/equipe/victor.webp', about: 'Fundador e dono da Conceito. Define a visão do escritório, cuida das parcerias estratégicas e acompanha de perto os clientes, garantindo que contabilidade e gestão andem juntas.' },
-  { tier: 1, name: 'Davi Lima da Silva', title: 'Sócio-administrador', area: 'Sociedade', about: 'Sócio-administrador da Conceito, atuando na gestão do escritório e no relacionamento com os clientes.' },
-  { tier: 1, name: 'Ailton Leonardo de Melo Neto', title: 'Sócio-administrador', area: 'Sociedade', about: 'Sócio-administrador da Conceito, atuando na gestão do escritório e no desenvolvimento dos serviços.' },
-  { tier: 2, name: 'Mariana Albuquerque', title: 'Contadora responsável', area: 'Contabilidade', crc: 'CRC-AL 000000/O', about: 'Lidera escrituração, obrigações fiscais e planejamento tributário.' },
-  { tier: 2, name: 'Rafael Tavares', title: 'Gerente financeiro', area: 'Controladoria & BPO', crc: 'CRC-AL 000000/O', about: 'Cuida de indicadores, fluxo de caixa e gestão financeira terceirizada.' },
-  { tier: 2, name: 'Camila Duarte', title: 'Coordenadora de DP', area: 'Departamento Pessoal', about: 'Folha de pagamento, admissões, rescisões e compliance trabalhista, sempre dentro do prazo.' },
-  { tier: 2, name: 'Lucas Ferreira', title: 'Gestor de contas', area: 'Gestão de contas', about: 'Seu gestor dedicado: relatórios claros, avisos de prazo e comunicação direta pelo WhatsApp.' },
-  { tier: 3, name: 'Larissa Costa', title: 'Assistente contábil', area: 'Contabilidade', about: 'Conciliações, lançamentos e organização dos documentos enviados pelos clientes.' },
-  { tier: 3, name: 'Pedro Alves', title: 'Assistente de DP', area: 'Departamento Pessoal', about: 'Apoio na folha, ponto, férias e benefícios dos colaboradores dos clientes.' },
+  { tier: 1, name: 'Davi Lima', title: 'Gerente Contábil', area: 'Contabilidade', about: 'Sócio da Conceito, à frente da área contábil: escrituração, balanços e relatórios que dão clareza aos números da sua empresa.' },
+  { tier: 1, name: 'Ailton', title: 'Gerente Fiscal', area: 'Fiscal', about: 'Sócio da Conceito, à frente da área fiscal: apuração de tributos, obrigações acessórias e planejamento tributário.' },
+  { tier: 2, name: 'João Eduardo', title: 'Assistente Fiscal', area: 'Fiscal', about: 'Apoio na apuração de impostos, emissão de guias e controle das obrigações fiscais dos clientes.' },
+  { tier: 2, name: 'Micael Santos', title: 'Assistente Administrativo', area: 'Administrativo', about: 'Organização de documentos, atendimento e suporte às rotinas administrativas do escritório.' },
+  { tier: 2, name: 'Nayara Torres', title: 'Assistente Administrativa', area: 'Administrativo', about: 'Atendimento aos clientes, controle de documentos e apoio às rotinas administrativas do escritório.' },
 ]
 
 /** Depoimentos aprovados para exibição pública (com autorização do cliente). */
