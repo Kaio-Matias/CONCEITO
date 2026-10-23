@@ -1,93 +1,82 @@
-import { useEffect, useState } from 'react'
-import { DIGITAL_FEATURES } from '../data/content'
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react'
 import { CLIENT_APP } from '../services/clientArea'
 import { Icon } from './Icon'
 import { useInView } from '../hooks/useReveal'
 
-const SHOTS = [
-  { src: '/app/tela-1.webp', alt: 'Tela inicial do app Conceito Negócios com faturamento e atalhos' },
-  { src: '/app/tela-2.webp', alt: 'Guias pendentes com valores e vencimentos' },
-  { src: '/app/tela-3.webp', alt: 'Central de documentos compartilhados com a contabilidade' },
-  { src: '/app/tela-4.webp', alt: 'Chat direto com a contabilidade' },
-  { src: '/app/tela-5.webp', alt: 'Acompanhamento de processos e guias' },
-  { src: '/app/tela-6.webp', alt: 'Notificações e comunicados fiscais' },
-  { src: '/app/tela-7.webp', alt: 'Central de arquivos XML com indicadores' },
+/** Recursos do app, cada um ligado à tela real publicada nas lojas. */
+const FEATURES = [
+  { icon: 'monitor', title: 'Painel da empresa', text: 'Faturamento e atalhos assim que você abre o app.', src: '/app/tela-1.webp' },
+  { icon: 'file-text', title: 'Guias de impostos', text: 'Valores e vencimentos prontos para pagar, sem atraso.', src: '/app/tela-2.webp' },
+  { icon: 'folder', title: 'Documentos', text: 'Envie e receba documentos em um só lugar.', src: '/app/tela-3.webp' },
+  { icon: 'message', title: 'Chat com a equipe', text: 'Tire dúvidas direto com a sua contabilidade.', src: '/app/tela-4.webp' },
+  { icon: 'list', title: 'Seus processos', text: 'Acompanhe cada pedido e guia em tempo real.', src: '/app/tela-5.webp' },
+  { icon: 'bell', title: 'Avisos importantes', text: 'Comunicados e lembretes de prazo no celular.', src: '/app/tela-6.webp' },
+  { icon: 'receipt', title: 'Notas fiscais', text: 'Seus arquivos XML organizados, com relatórios.', src: '/app/tela-7.webp' },
 ]
 
-/** Telas reais do app (as mesmas publicadas na Play Store e App Store). */
-function AppShots() {
-  const [i, setI] = useState(0)
-  const [paused, setPaused] = useState(false)
-  const n = SHOTS.length
-
-  useEffect(() => {
-    if (paused || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const t = setInterval(() => setI((v) => (v + 1) % n), 3800)
-    return () => clearInterval(t)
-  }, [paused, n])
-
-  return (
-    <div className="shots" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-      <div className="shots__stage">
-        {SHOTS.map((s, k) => {
-          const off = ((k - i + n) % n)
-          const pos = off === 0 ? 'is-active' : off === 1 ? 'is-next' : off === n - 1 ? 'is-prev' : 'is-hidden'
-          return (
-            <img
-              key={s.src}
-              src={s.src}
-              alt={s.alt}
-              className={`shots__img ${pos}`}
-              loading={k < 2 ? 'eager' : 'lazy'}
-              width={720}
-              height={1558}
-              onClick={() => setI(k)}
-              aria-hidden={off !== 0}
-            />
-          )
-        })}
-      </div>
-      <div className="shots__nav">
-        <button type="button" aria-label="Tela anterior" onClick={() => setI((v) => (v - 1 + n) % n)}><Icon name="arrow" size={16} /></button>
-        <div className="shots__dots">
-          {SHOTS.map((s, k) => (
-            <button key={s.src} type="button" aria-label={`Ver tela ${k + 1}`} aria-current={k === i} className={k === i ? 'is-on' : ''} onClick={() => setI(k)} />
-          ))}
-        </div>
-        <button type="button" aria-label="Próxima tela" onClick={() => setI((v) => (v + 1) % n)}><Icon name="arrow" size={16} /></button>
-      </div>
-    </div>
-  )
-}
+const STEP_MS = 4500
+const reduced = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 export function Digital() {
-  const [ref, seen] = useInView<HTMLElement>(0.15)
+  const [ref, seen] = useInView<HTMLElement>(0.2)
+  const [active, setActive] = useState(0)
+  const [hold, setHold] = useState(false)
+  const deck = useRef<HTMLDivElement>(null)
+  const n = FEATURES.length
+
+  // Avança sozinho enquanto a seção está na tela e ninguém está interagindo.
+  useEffect(() => {
+    if (!seen || hold || reduced()) return
+    const t = setTimeout(() => setActive((a) => (a + 1) % n), STEP_MS)
+    return () => clearTimeout(t)
+  }, [seen, hold, active, n])
+
+  function tilt(e: PointerEvent<HTMLDivElement>) {
+    if (e.pointerType !== 'mouse') return
+    const el = deck.current!
+    const r = el.getBoundingClientRect()
+    el.style.setProperty('--tx', (((e.clientX - r.left) / r.width) - 0.5).toFixed(3))
+    el.style.setProperty('--ty', (((e.clientY - r.top) / r.height) - 0.5).toFixed(3))
+  }
+  function untilt() {
+    deck.current?.style.setProperty('--tx', '0')
+    deck.current?.style.setProperty('--ty', '0')
+    setHold(false)
+  }
+
   return (
     <section className={`section digital reveal ${seen ? 'is-in' : ''}`} id="digital" ref={ref}>
-      <div className="container digital__grid">
-        <div className="digital__visual">
-          <span className="digital__glow" aria-hidden="true" />
-          <AppShots />
-        </div>
-        <div>
-          <p className="eyebrow"><span /> 100% digital</p>
-          <h2>Sua empresa na palma da mão: documentos, relatórios e suporte a um toque de distância.</h2>
+      <div className="container container--wide digital__grid">
+        <div className="digital__copy">
+          <p className="eyebrow"><span /> App Conceito Negócios</p>
+          <h2>Sua contabilidade <em>na palma da mão.</em></h2>
           <p className="lead">
-            Na Conceito Business, a tecnologia não é um diferencial — é a base de tudo. Eliminamos
-            completamente o papel dos nossos processos, garantindo agilidade, segurança e
-            rastreabilidade em cada interação.
+            Pelo app ou pelo computador, você acompanha tudo o que fazemos pela sua empresa — a qualquer hora,
+            sem papel e sem precisar ligar.
           </p>
-          <ul className="features">
-            {DIGITAL_FEATURES.map((f) => (
-              <li key={f.title}>
-                <span><Icon name={f.icon} size={22} /></span>
-                <div>
-                  <h3>{f.title}</h3>
-                  <p>{f.text}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+
+          <ol className="app-feats" onMouseEnter={() => setHold(true)} onMouseLeave={() => setHold(false)}>
+            {FEATURES.map((f, i) => {
+              const on = i === active
+              return (
+                <li key={f.title} className={on ? 'is-on' : ''}>
+                  <button type="button" aria-pressed={on} onClick={() => setActive(i)}>
+                    <span className="app-feats__icon"><Icon name={f.icon} size={20} /></span>
+                    <span className="app-feats__txt"><strong>{f.title}</strong><small>{f.text}</small></span>
+                  </button>
+                  {on && (
+                    <span
+                      key={active}
+                      className={`app-feats__bar ${hold || !seen ? 'is-paused' : ''}`}
+                      style={{ animationDuration: `${STEP_MS}ms` }}
+                      aria-hidden="true"
+                    />
+                  )}
+                </li>
+              )
+            })}
+          </ol>
+
           <div className="stores">
             <a className="stores__btn" href={CLIENT_APP.playStore} target="_blank" rel="noopener noreferrer">
               <img src="/app/icone.png" alt="" width={28} height={28} />
@@ -99,9 +88,36 @@ export function Digital() {
             </a>
             <a className="stores__btn stores__btn--web" href={CLIENT_APP.portal} target="_blank" rel="noopener noreferrer">
               <Icon name="monitor" size={22} />
-              <span><small>Acesse pelo</small>Portal web</span>
+              <span><small>Ou acesse pelo</small>Portal web</span>
             </a>
           </div>
+        </div>
+
+        <div
+          className="app-deck"
+          ref={deck}
+          onPointerMove={tilt}
+          onPointerEnter={() => setHold(true)}
+          onPointerLeave={untilt}
+        >
+          <span className="app-deck__glow" aria-hidden="true" />
+          {FEATURES.map((f, i) => {
+            const off = (i - active + n) % n
+            return (
+              <img
+                key={f.src}
+                src={f.src}
+                alt={off === 0 ? `Tela do app: ${f.title}` : ''}
+                aria-hidden={off !== 0}
+                className={`app-deck__card ${off > 2 ? 'is-hidden' : ''}`}
+                style={{ '--o': Math.min(off, 3) } as CSSProperties}
+                loading={i < 2 ? 'eager' : 'lazy'}
+                width={720}
+                height={1558}
+                onClick={() => setActive(i)}
+              />
+            )
+          })}
         </div>
       </div>
     </section>

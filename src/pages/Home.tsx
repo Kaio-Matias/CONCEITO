@@ -12,10 +12,12 @@ import { Feedback } from '../components/Feedback'
 import { Faq } from '../components/Faq'
 import { Contact } from '../components/Contact'
 import { Footer } from '../components/Footer'
+import { Splash } from '../components/Splash'
 
 export default function Home() {
   return (
     <>
+      <Splash />
       <Header />
       <main>
         <Hero />

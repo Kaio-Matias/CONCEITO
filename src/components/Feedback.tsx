@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useState, type CSSProperties, type FormEvent } from 'react'
 import { TESTIMONIALS } from '../data/content'
 import { submitFeedback } from '../services/feedback'
 import { Icon } from './Icon'
@@ -6,101 +6,29 @@ import { initials } from './Team'
 import { useInView } from '../hooks/useReveal'
 
 const LABELS = ['Ruim', 'Regular', 'Bom', 'Muito bom', 'Excelente']
+const GOOD_TAGS = ['Atendimento', 'Rapidez', 'Clareza', 'App', 'Impostos em dia', 'Confiança']
+const IMPROVE_TAGS = ['Atendimento', 'Rapidez', 'Clareza', 'App', 'Prazos', 'Comunicação']
 
-function Stars({ value }: { value: number }) {
+function Stars({ value, size = 16 }: { value: number; size?: number }) {
   return (
-    <span className="stars" role="img" aria-label={`${value} de 5 estrelas`}>
-      {[1, 2, 3, 4, 5].map((n) => <Icon key={n} name="star" size={16} className={n <= value ? 'on' : ''} />)}
+    <span className="fb-stars" role="img" aria-label={`${value} de 5 estrelas`}>
+      {[1, 2, 3, 4, 5].map((n) => <Icon key={n} name="star" size={size} className={n <= value ? 'on' : ''} />)}
     </span>
   )
 }
 
-const AUTOPLAY_MS = 6500
-
-function Carousel() {
-  const n = TESTIMONIALS.length
-  const [idx, setIdx] = useState(0)
-  const [paused, setPaused] = useState(false)
-  const drag = useRef<number | null>(null)
-  const go = (d: number) => setIdx((i) => (i + d + n) % n)
-
-  useEffect(() => {
-    if (paused || n < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const t = setTimeout(() => setIdx((i) => (i + 1) % n), AUTOPLAY_MS)
-    return () => clearTimeout(t)
-  }, [idx, paused, n])
-
-  const half = Math.floor(n / 2)
+/** Card de depoimento (usado na prévia ao vivo e no mural de depoimentos reais). */
+function TestimonialCard({ name, company, rating, text, preview }: { name: string; company: string; rating: number; text: string; preview?: boolean }) {
   return (
-    <div
-      className="car"
-      role="region"
-      aria-roledescription="carrossel"
-      aria-label="Depoimentos de clientes"
-      tabIndex={0}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
-      onKeyDown={(e) => { if (e.key === 'ArrowRight') go(1); if (e.key === 'ArrowLeft') go(-1) }}
-    >
-      <span className="car__mark" aria-hidden="true">“</span>
-      <div
-        className="car__stage"
-        onPointerDown={(e) => { drag.current = e.clientX }}
-        onPointerUp={(e) => {
-          if (drag.current === null) return
-          const dx = e.clientX - drag.current
-          drag.current = null
-          if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1)
-        }}
-        onPointerCancel={() => { drag.current = null }}
-      >
-        {TESTIMONIALS.map((t, i) => {
-          const off = ((i - idx + n + half) % n) - half
-          const a = Math.abs(off)
-          const active = off === 0
-          return (
-            <figure
-              key={t.name}
-              className={`car__card ${active ? 'is-active' : ''}`}
-              aria-hidden={!active}
-              style={{
-                transform: `translateX(${off * 56}%) scale(${1 - a * 0.13}) rotateY(${off * -10}deg)`,
-                opacity: a > 1 ? 0 : 1 - a * 0.5,
-                zIndex: 10 - a,
-                filter: a ? `blur(${a * 1.5}px)` : 'none',
-                pointerEvents: a > 1 ? 'none' : 'auto',
-              }}
-              onClick={() => { if (!active) setIdx(i) }}
-            >
-              <div className="wall__top">
-                <Stars value={t.rating} />
-                {t.result && <em>{t.result}</em>}
-              </div>
-              <blockquote>{t.text}</blockquote>
-              <figcaption>
-                <span className="wall__av">{initials(t.name)}</span>
-                <div><strong>{t.name}</strong><span>{t.role} · {t.company}</span></div>
-              </figcaption>
-            </figure>
-          )
-        })}
-      </div>
-      {n > 1 && (
-        <div className="car__ctrl">
-          <button type="button" onClick={() => go(-1)} aria-label="Depoimento anterior" className="car__btn car__btn--prev"><Icon name="arrow" size={18} /></button>
-          <div className="car__dots">
-            {TESTIMONIALS.map((t, i) => (
-              <button key={t.name} type="button" aria-label={`Ir para o depoimento de ${t.name}`} aria-current={i === idx} className={i === idx ? 'on' : ''} onClick={() => setIdx(i)}>
-                {i === idx && <i key={idx} className={paused ? 'is-paused' : ''} style={{ animationDuration: `${AUTOPLAY_MS}ms` }} />}
-              </button>
-            ))}
-          </div>
-          <button type="button" onClick={() => go(1)} aria-label="Próximo depoimento" className="car__btn"><Icon name="arrow" size={18} /></button>
-        </div>
-      )}
-    </div>
+    <figure className={`fb-card ${preview ? 'fb-card--preview' : ''}`}>
+      <span className="fb-card__mark" aria-hidden="true">“</span>
+      <Stars value={rating} />
+      <blockquote>{text}</blockquote>
+      <figcaption>
+        <span className="fb-card__av">{initials(name) || '?'}</span>
+        <span><strong>{name}</strong><small>{company}</small></span>
+      </figcaption>
+    </figure>
   )
 }
 
@@ -108,83 +36,114 @@ export function Feedback() {
   const [ref, seen] = useInView<HTMLElement>(0.1)
   const [rating, setRating] = useState(0)
   const [hover, setHover] = useState(0)
+  const [name, setName] = useState('')
+  const [company, setCompany] = useState('')
+  const [message, setMessage] = useState('')
+  const [tags, setTags] = useState<string[]>([])
   const [state, setState] = useState<'idle' | 'sent' | 'norating'>('idle')
+
+  const shown = hover || rating
+  const happy = rating >= 4
+  const tagOptions = rating && !happy ? IMPROVE_TAGS : GOOD_TAGS
+  const toggleTag = (t: string) => setTags((ts) => (ts.includes(t) ? ts.filter((x) => x !== t) : [...ts, t]))
+
+  function pickRating(n: number) {
+    // ao mudar de "elogio" para "melhoria" (ou o contrário), as etiquetas mudam de sentido
+    if ((n >= 4) !== (rating >= 4)) setTags([])
+    setRating(n)
+    setState('idle')
+  }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     if (!rating) { setState('norating'); return }
-    const form = e.currentTarget
-    const f = new FormData(form)
-    await submitFeedback({
-      name: String(f.get('name')),
-      company: String(f.get('company')),
-      rating,
-      message: String(f.get('message')),
-      canPublish: f.get('publish') === 'on',
-    })
-    form.reset()
-    setRating(0)
+    const f = new FormData(e.currentTarget)
+    await submitFeedback({ name, company, rating, tags, message, canPublish: f.get('publish') === 'on' })
     setState('sent')
   }
 
-  const shown = hover || rating
+  const question = !rating
+    ? 'Como você avalia a Conceito?'
+    : happy ? 'Que bom! O que você mais gosta?' : 'Poxa! O que podemos melhorar?'
 
   return (
-    <section className={`section feedback reveal ${seen ? 'is-in' : ''}`} id="feedback" ref={ref}>
-      <div className="container">
-        <div className="section__head">
-          <p className="eyebrow"><span /> Clientes Conceito</p>
-          <h2>Já é nosso cliente? Sua opinião molda o nosso atendimento</h2>
-          <p className="lead">Conte como está sendo a experiência. Cada feedback é lido pela nossa equipe e vira melhoria.</p>
+    <section className={`section fb reveal ${seen ? 'is-in' : ''}`} id="feedback" ref={ref}>
+      <div className="container container--wide">
+        <div className="fb__head">
+          <div>
+            <p className="eyebrow"><span /> Clientes Conceito</p>
+            <h2>Já é nosso cliente? <em>Sua opinião faz diferença.</em></h2>
+          </div>
+          <p className="lead">Conte como está sendo a experiência. Cada feedback é lido pela nossa equipe e vira melhoria no atendimento.</p>
         </div>
 
-        <div className="feedback__grid">
-          {TESTIMONIALS.length ? <Carousel /> : (
-            <div className="wall">
-              <div className="wall__empty">
-                <span><Icon name="quote" size={28} /></span>
-                <h3>O mural de depoimentos é construído por clientes</h3>
-                <p>Os feedbacks autorizados para publicação aparecem aqui, com nome e empresa. Seja um dos primeiros a contar sua experiência.</p>
-              </div>
-            </div>
-          )}
+        {TESTIMONIALS.length > 0 && (
+          <div className="fb__wall">
+            {TESTIMONIALS.map((t) => <TestimonialCard key={t.name} name={t.name} company={`${t.role} · ${t.company}`} rating={t.rating} text={t.text} />)}
+          </div>
+        )}
 
-          <form className="form fbform" onSubmit={onSubmit}>
-            <fieldset>
-              <legend>Como você avalia a Conceito?</legend>
-              <div className="rate" onMouseLeave={() => setHover(0)}>
+        <div className="fb__grid">
+          <form className="fb-form" onSubmit={onSubmit}>
+            <fieldset className="fb-rate">
+              <legend key={question} className="fb-rate__q">{question}</legend>
+              <div className="fb-rate__stars" onMouseLeave={() => setHover(0)}>
                 {[1, 2, 3, 4, 5].map((n) => (
                   <button type="button" key={n} aria-label={`${n} — ${LABELS[n - 1]}`} aria-pressed={rating === n}
-                    className={n <= shown ? 'on' : ''} onMouseEnter={() => setHover(n)}
-                    onClick={() => { setRating(n); setState('idle') }}>
-                    <Icon name="star" size={30} />
+                    className={n <= shown ? 'on' : ''} style={{ '--n': n } as CSSProperties}
+                    onMouseEnter={() => setHover(n)} onClick={() => pickRating(n)}>
+                    <Icon name="star" size={34} />
                   </button>
                 ))}
-                <span>{shown ? LABELS[shown - 1] : 'Toque nas estrelas'}</span>
+                <span className="fb-rate__label">{shown ? LABELS[shown - 1] : 'Toque nas estrelas'}</span>
               </div>
             </fieldset>
-            <div className="fbform__two">
+
+            {rating > 0 && (
+              <div className="fb-tags" role="group" aria-label={happy ? 'O que você mais gosta' : 'O que podemos melhorar'}>
+                {tagOptions.map((t) => (
+                  <button key={t} type="button" aria-pressed={tags.includes(t)} className={tags.includes(t) ? 'is-on' : ''} onClick={() => toggleTag(t)}>
+                    {tags.includes(t) && <Icon name="check" size={14} />} {t}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            <div className="fb-form__two">
               <label>Seu nome
-                <input name="name" required autoComplete="name" />
+                <input name="name" required autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} />
               </label>
               <label>Empresa
-                <input name="company" required autoComplete="organization" />
+                <input name="company" required autoComplete="organization" value={company} onChange={(e) => setCompany(e.target.value)} />
               </label>
             </div>
             <label>Seu feedback
-              <textarea name="message" required rows={4} minLength={10} placeholder="O que está funcionando bem? O que podemos melhorar?" />
+              <textarea name="message" required rows={4} minLength={10} value={message} onChange={(e) => setMessage(e.target.value)}
+                placeholder={happy || !rating ? 'Conte como a Conceito ajuda a sua empresa…' : 'Conte o que aconteceu e como podemos melhorar…'} />
             </label>
-            <label className="check">
+            <label className="fb-check">
               <input type="checkbox" name="publish" />
-              <span>Autorizo a Conceito Business a publicar meu nome, empresa e depoimento no site.</span>
+              <span>Autorizo a Conceito a publicar meu nome, empresa e depoimento no site.</span>
             </label>
-            <button className="btn btn--primary btn--lg"><Icon name="arrow" size={18} /> Enviar feedback</button>
-            <p className="form__note" role="status">
-              {state === 'sent' && 'Obrigado! Recebemos seu feedback. 💙'}
+            <button className="btn btn--primary btn--lg hero__btn"><Icon name="whatsapp" size={18} /> Enviar feedback</button>
+            <p className="fb-form__note" role="status">
+              {state === 'sent' && 'Obrigado! Abrimos o WhatsApp com o seu feedback — é só tocar em enviar. 💙'}
               {state === 'norating' && 'Escolha uma nota de 1 a 5 estrelas antes de enviar.'}
-              {state === 'idle' && 'Leva menos de 1 minuto.'}
+              {state === 'idle' && 'O feedback é enviado pelo WhatsApp direto para a nossa equipe.'}
             </p>
           </form>
+
+          <div className="fb__preview" aria-hidden="true">
+            <p className="fb__preview-label"><Icon name="eye" size={16} /> Prévia do seu depoimento</p>
+            <TestimonialCard
+              preview
+              name={name || 'Seu nome'}
+              company={company || 'Sua empresa'}
+              rating={rating || 5}
+              text={message || 'Seu depoimento aparece aqui enquanto você escreve. Com a sua autorização, ele pode ir para o mural do site.'}
+            />
+            <p className="fb__preview-note">Depoimentos só são publicados com autorização e depois de revisados pela nossa equipe.</p>
+          </div>
         </div>
       </div>
     </section>

@@ -1,7 +1,7 @@
 import {
   Clock, EyeOff, Lock, FileText, BarChart3, Wallet, Users, Landmark, HandCoins, ShieldCheck,
   BadgeCheck, Smartphone, Monitor, Workflow, Check, Minus, ArrowRight, ArrowUpRight, Plus,
-  Mail, Phone, Instagram, Menu, X, LogIn, Star, Quote, type LucideProps,
+  Mail, Phone, Instagram, Menu, X, LogIn, Star, Quote, Store, RefreshCw, FolderOpen, MessageCircle, ListChecks, Bell, Receipt, Building2, Search, Eye, type LucideProps,
 } from 'lucide-react'
 
 /** Logo do WhatsApp (marca), no mesmo formato dos ícones lucide. */
@@ -19,7 +19,8 @@ const MAP = {
   'shield-check': ShieldCheck, badge: BadgeCheck, smartphone: Smartphone, monitor: Monitor,
   workflow: Workflow, check: Check, minus: Minus, arrow: ArrowRight, 'arrow-up-right': ArrowUpRight,
   plus: Plus, whatsapp: WhatsApp, mail: Mail, phone: Phone, instagram: Instagram,
-  menu: Menu, close: X, login: LogIn, star: Star, quote: Quote,
+  menu: Menu, close: X, login: LogIn, star: Star, quote: Quote, store: Store, refresh: RefreshCw,
+  folder: FolderOpen, message: MessageCircle, list: ListChecks, bell: Bell, receipt: Receipt, building: Building2, search: Search, eye: Eye,
 }
 
 export type IconName = keyof typeof MAP
