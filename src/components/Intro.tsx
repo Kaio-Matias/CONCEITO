@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react'
-import { ABOUT_FACTS, COMPANY, COMPARISON, REASONS } from '../data/content'
+import { ABOUT_FACTS, COMPARISON, REASONS } from '../data/content'
 import { whatsappUrl } from '../services/leads'
 import { Icon } from './Icon'
 import { useInView } from '../hooks/useReveal'
 
 // Frase de apresentação; palavras entre *asteriscos* ganham destaque na cor da marca.
-const MANIFESTO = `Somos a *Conceito,* um escritório de contabilidade de ${COMPANY.city.split('/')[0]} que cuida de cada empresa *como se fosse a nossa* — para você ter *tempo e tranquilidade* para crescer.`
+const MANIFESTO = `Somos a *Conceito,* contabilidade nascida em Alagoas. Enquanto cuidamos dos números, impostos e prazos, você cuida do que realmente importa: *fazer sua empresa crescer.*`
   .split(/(\*[^*]+\*)/).filter(Boolean)
   .flatMap((part) => {
     const accent = part.startsWith('*')

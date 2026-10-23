@@ -17,14 +17,46 @@ export const COMPANY = {
   mapsCoords: '-9.40921,-36.632831',
 }
 
-export const NAV = [
-  { href: '#solucoes', label: 'Soluções' },
-  { href: '#digital', label: 'Plataforma' },
-  { href: '#resultados', label: 'Resultados' },
-  { href: '#processo', label: 'Como funciona' },
-  { href: '#planos', label: 'Planos' },
-  { href: '#faq', label: 'Dúvidas' },
+/**
+ * Menu do site em grupos (todas as seções da página inicial).
+ * Grupo com `items` vira menu suspenso; grupo com `href` é um link direto.
+ */
+export interface NavItem { href: string; label: string; text: string; icon: string }
+export interface NavGroup { label: string; href?: string; items?: NavItem[] }
+export const NAV_GROUPS: NavGroup[] = [
+  {
+    label: 'A Conceito',
+    items: [
+      { href: '#por-que', label: 'Por que ter contabilidade', text: 'Sem contador × com a Conceito', icon: 'shield-check' },
+      { href: '#sobre', label: 'Quem somos', text: 'Contabilidade nascida em Alagoas', icon: 'landmark' },
+      { href: '#equipe', label: 'Equipe', text: 'Os sócios que cuidam da sua empresa', icon: 'users' },
+      { href: '#resultados', label: 'Resultados', text: 'O que muda na prática', icon: 'bar-chart' },
+    ],
+  },
+  {
+    label: 'Serviços',
+    items: [
+      { href: '#solucoes', label: 'Soluções', text: 'Todos os serviços contábeis', icon: 'file-text' },
+      { href: '#planos', label: 'Planos', text: 'Do MEI à empresa de grande porte', icon: 'store' },
+      { href: '#processo', label: 'Como funciona', text: 'O passo a passo para começar', icon: 'list' },
+      { href: '#simulador', label: 'Simulador', text: 'Quanto sua empresa pode economizar', icon: 'wallet' },
+    ],
+  },
+  { label: 'Plataforma', href: '#digital' },
+  {
+    label: 'Ajuda',
+    items: [
+      { href: '#faq', label: 'Dúvidas', text: 'Perguntas que sempre ouvimos', icon: 'search' },
+      { href: '#feedback', label: 'Deixe seu feedback', text: 'Sua opinião sobre a Conceito', icon: 'star' },
+      { href: '#contato', label: 'Contato', text: 'WhatsApp, e-mail e endereço', icon: 'phone' },
+    ],
+  },
 ]
+
+/** Todas as seções em lista simples (rodapé e destaque da seção atual). */
+export const NAV: { href: string; label: string }[] = NAV_GROUPS.flatMap((g) =>
+  g.items ? g.items.map(({ href, label }) => ({ href, label })) : [{ href: g.href!, label: g.label }],
+)
 
 /** "Sem contador × Com a Conceito": situações do dia a dia, em linguagem simples. */
 export const COMPARISON = [

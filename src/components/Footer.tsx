@@ -27,7 +27,7 @@ export function Footer() {
               </div>
             </div>
 
-            <nav className="footer__col" aria-label="Navegação do rodapé">
+            <nav className="footer__col footer__col--nav" aria-label="Navegação do rodapé">
               <strong>Navegação</strong>
               {NAV.map((n) => <a key={n.href} href={`/${n.href}`}>{n.label}</a>)}
             </nav>
