@@ -18,6 +18,16 @@ const LABEL: Record<Platform, string> = {
 export default function ClientArea() {
   const [platform] = useState<Platform>(detectPlatform)
 
+  // Página só de redirecionamento: fica fora dos resultados de busca.
+  useEffect(() => {
+    const meta = document.createElement('meta')
+    meta.name = 'robots'
+    meta.content = 'noindex, follow'
+    document.head.querySelectorAll('meta[name="robots"]').forEach((m) => m.remove())
+    document.head.appendChild(meta)
+    document.title = 'Área do cliente | Conceito Contabilidade e Negócios'
+  }, [])
+
   useEffect(() => {
     const t = setTimeout(() => openClientArea({ replace: true }), 400)
     return () => clearTimeout(t)

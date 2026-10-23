@@ -1,4 +1,5 @@
 import { COMPANY } from '../data/content'
+import { track } from './analytics'
 
 export interface Lead {
   name: string
@@ -17,12 +18,17 @@ export function whatsappUrl(message: string) {
  * basta trocar o corpo desta função por um POST para a API.
  */
 export async function submitLead(lead: Lead) {
-  const msg = [
+  track('generate_lead', { method: 'formulario_contato', need: lead.need })
+  window.open(whatsappUrl(leadMessage(lead)), '_blank', 'noopener')
+}
+
+/** Texto enviado pelo formulário de contato (também mostrado como prévia antes do envio). */
+export function leadMessage(lead: Lead) {
+  return [
     'Olá! Vim pelo site da Conceito Business e gostaria de uma proposta.',
     `Nome: ${lead.name}`,
     lead.company ? `Empresa: ${lead.company}` : '',
     `Preciso de: ${lead.need}`,
     `Meu WhatsApp: ${lead.phone}`,
   ].filter(Boolean).join('\n')
-  window.open(whatsappUrl(msg), '_blank', 'noopener')
 }

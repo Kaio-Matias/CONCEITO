@@ -1,4 +1,5 @@
 import { whatsappUrl } from './leads'
+import { track } from './analytics'
 
 export interface Feedback {
   name: string
@@ -15,6 +16,7 @@ export interface Feedback {
  * Quando o backend existir, troque o corpo por um POST /feedback — o depoimento só vai ao ar após aprovação.
  */
 export async function submitFeedback(fb: Feedback) {
+  track('feedback_submit', { rating: fb.rating, can_publish: fb.canPublish })
   const msg = [
     'Olá! Quero deixar meu feedback sobre a Conceito.',
     `Nota: ${'★'.repeat(fb.rating)}${'☆'.repeat(5 - fb.rating)} (${fb.rating}/5)`,

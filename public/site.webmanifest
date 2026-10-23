@@ -1,0 +1,11 @@
+{
+  "name": "Conceito Contabilidade e Negócios",
+  "short_name": "Conceito",
+  "description": "Escritório de contabilidade em Palmeira dos Índios/AL.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#ffffff",
+  "theme_color": "#071457",
+  "icons": [{ "src": "/app/icone.png", "sizes": "192x192", "type": "image/png" }]
+}

@@ -11,6 +11,10 @@ export const COMPANY = {
   crc: 'CRC-AL 008526/O-2',
   address: 'Rua Mariano de Freitas, 85, Sala 3 · São Cristóvão',
   city: 'Palmeira dos Índios/AL · CEP 57.601-070',
+  /** Perfil da Conceito no Google Maps (link oficial) e o ponto exato do escritório. */
+  mapsUrl: 'https://maps.app.goo.gl/CMFokGz27vFMutm86',
+  mapsPlace: 'Conceito Contabilidade e Negócios, Palmeira dos Índios - AL',
+  mapsCoords: '-9.40921,-36.632831',
 }
 
 export const NAV = [

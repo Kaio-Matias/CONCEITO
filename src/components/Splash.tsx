@@ -2,11 +2,15 @@ import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 
 const DURATION = 3300 // ms até começar a sair
 
-/** Mostra a splash a cada carregamento do site, exceto com "reduzir movimento". */
-const SHOW_ON_LOAD = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+/**
+ * Mostra a splash a cada carregamento do site que comece pela página inicial,
+ * exceto com "reduzir movimento". Quem chega direto em outra página (ex.: /privacidade) não a vê.
+ */
+const SHOW_ON_LOAD = window.location.pathname === '/' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 /** Avisa o resto da página (classe no <html>) que a abertura terminou e as animações podem começar. */
-const markDone = () => document.documentElement.classList.add('splash-done')
+let played = false
+const markDone = () => { played = true; document.documentElement.classList.add('splash-done') }
 if (!SHOW_ON_LOAD) markDone()
 
 /** Símbolo da Conceito redesenhado em vetor (mesma geometria do logo). */
@@ -25,7 +29,8 @@ function Mark() {
  * recolhe, o símbolo se monta e o nome é revelado. Clique ou tecla pulam a animação.
  */
 export function Splash() {
-  const [show, setShow] = useState(SHOW_ON_LOAD)
+  // Toca ao carregar/recarregar o site; ao voltar para a página inicial pelos links internos, não repete.
+  const [show, setShow] = useState(() => SHOW_ON_LOAD && !played)
   const [leaving, setLeaving] = useState(false)
 
   const { tile, cols, tiles } = useMemo(() => {
