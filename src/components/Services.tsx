@@ -13,7 +13,7 @@ function Detail({ s }: { s: Service }) {
       <div className="sv-detail__top">
         <span className="sv-detail__icon"><Icon name={s.icon} size={28} /></span>
         <div>
-          <small>{s.short}</small>
+          <small>{'tag' in s && s.tag ? s.tag : s.short}</small>
           <h3>{s.title}</h3>
         </div>
       </div>

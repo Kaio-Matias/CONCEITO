@@ -90,10 +90,28 @@ export const SERVICES = [
     ideal: 'Quem vai começar ou quer sair da informalidade',
   },
   {
-    icon: 'file-text', title: 'Contabilidade', short: 'Impostos e obrigações em dia',
-    text: 'Calculamos seus impostos, entregamos as declarações obrigatórias e explicamos os números da sua empresa de um jeito que você entende.',
-    includes: ['Cálculo e emissão das guias de impostos', 'Declarações entregues no prazo', 'Relatório mensal simples de entender', 'Orientação para pagar menos imposto, dentro da lei'],
-    ideal: 'Toda empresa, do MEI à LTDA',
+    icon: 'file-text', title: 'Contabilidade', short: 'Sua empresa com números confiáveis',
+    tag: 'ESCRITURAÇÃO E DEMONSTRAÇÕES',
+    text: 'Registramos toda a movimentação da sua empresa e transformamos isso em balanço, DRE e relatórios que mostram a saúde real do negócio. É a base para tomar decisões, distribuir lucros com segurança e conseguir crédito.',
+    includes: [
+      'Escrituração contábil completa',
+      'Balanço patrimonial e DRE',
+      'Distribuição de lucros com respaldo legal',
+      'Demonstrativos aceitos por bancos e investidores',
+    ],
+    ideal: 'Toda empresa que quer crescer com segurança, do Simples à LTDA de grande porte.',
+  },
+  {
+    icon: 'receipt', title: 'Gestão Fiscal', short: 'Impostos e obrigações em dia',
+    tag: 'IMPOSTOS E OBRIGAÇÕES EM DIA',
+    text: 'Calculamos seus impostos, entregamos as declarações obrigatórias no prazo e buscamos sempre o menor imposto possível, dentro da lei.',
+    includes: [
+      'Cálculo e emissão das guias de impostos',
+      'Declarações entregues no prazo',
+      'Revisão do regime tributário',
+      'Orientação para pagar menos imposto, dentro da lei',
+    ],
+    ideal: 'Toda empresa, do MEI à LTDA.',
   },
   {
     icon: 'users', title: 'Folha de pagamento', short: 'Sua equipe paga certinho',
@@ -165,33 +183,248 @@ export const PROCESS_PATHS = [
   },
 ] as const
 
+export interface PlanFeatureItem {
+  label: string
+  detail: string
+  included: boolean
+  highlight?: boolean
+}
+
+export interface PlanColumn {
+  title: string
+  items: string[]
+}
+
+export interface PlanItem {
+  id: string
+  name: string
+  badge?: string
+  icon: string
+  profile: string
+  audience: string
+  featured?: boolean
+  ctaText: string
+  ctaMessage: string
+  support: string
+  fiscal: string
+  accounting: string
+  payroll: string
+  financial: string
+  reports: string
+  planning: string
+  taxReform: string
+  portal: string
+  credit?: string
+  bonus?: string
+  features: PlanFeatureItem[]
+  columns?: PlanColumn[]
+}
+
+const STRIP_PLAN: PlanItem = {
+  id: 'largada',
+  name: 'Largada',
+  badge: 'Para MEI',
+  icon: 'store',
+  profile: 'MEI',
+  audience: 'Para MEI que quer empreender sem medo de burocracia',
+  ctaText: 'Quero o plano Largada',
+  ctaMessage: 'Olá! Tenho interesse no plano Largada da Conceito (MEI) e gostaria de uma proposta.',
+  support: 'App e WhatsApp',
+  fiscal: 'DAS e DASN',
+  accounting: '—',
+  payroll: '1 funcionário',
+  financial: '—',
+  reports: '—',
+  planning: '—',
+  taxReform: 'Alertas',
+  portal: '✓ Incluso',
+  bonus: 'Ajuda para desenquadrar do MEI',
+  features: [
+    { label: 'Gestão Fiscal', detail: 'DAS e DASN em dia', included: true },
+    { label: 'Folha de pagamento', detail: '1 funcionário incluso', included: true },
+    { label: 'Reforma Tributária', detail: 'Alertas de impacto e prazos', included: true },
+    { label: 'App e portal', detail: 'Acesso completo pelo celular', included: true },
+    { label: 'Atendimento', detail: 'App e WhatsApp', included: true },
+    { label: 'Bônus de upgrade', detail: 'Ajuda para desenquadrar do MEI quando a empresa crescer', included: true, highlight: true },
+  ],
+}
+
+const GRID_PLANS: PlanItem[] = [
+  {
+    id: 'base',
+    name: 'Base',
+    icon: 'file-text',
+    profile: 'Simples, pequenas',
+    audience: 'Para empresas do Simples Nacional e pequenas operações',
+    ctaText: 'Quero o plano Base',
+    ctaMessage: 'Olá! Tenho interesse no plano Base da Conceito e gostaria de uma proposta.',
+    support: 'App e WhatsApp',
+    fiscal: 'Gestão fiscal completa',
+    accounting: 'Simplificada (balanço e DRE anuais – ITG 1000)',
+    payroll: 'Até 3 funcionários',
+    financial: '—',
+    reports: '—',
+    planning: '—',
+    taxReform: 'Alertas',
+    portal: '✓ Incluso',
+    features: [
+      { label: 'Gestão Fiscal', detail: 'Apuração e emissão de guias em dia', included: true },
+      { label: 'Escrituração contábil', detail: 'Simplificada (balanço e DRE anuais – ITG 1000)', included: true },
+      { label: 'Folha de pagamento', detail: 'Até 3 funcionários inclusos', included: true },
+      { label: 'Gestão financeira (pagar e receber)', detail: 'Não inclusa', included: false },
+      { label: 'Relatórios gerenciais', detail: 'Não inclusos', included: false },
+      { label: 'Planejamento e controladoria', detail: 'Não incluso', included: false },
+      { label: 'Reforma Tributária', detail: 'Alertas de mudanças', included: true },
+      { label: 'App e portal', detail: 'Acesso web e app integrado', included: true },
+    ],
+  },
+  {
+    id: 'impulso',
+    name: 'Impulso',
+    badge: 'Mais escolhido',
+    icon: 'bar-chart',
+    profile: 'Em expansão',
+    audience: 'Para empresas do Simples e Lucro Presumido em expansão',
+    featured: true,
+    ctaText: 'Quero o plano Impulso',
+    ctaMessage: 'Olá! Tenho interesse no plano Impulso da Conceito e gostaria de uma proposta.',
+    support: 'Contador dedicado',
+    fiscal: 'Gestão fiscal completa',
+    accounting: 'Completa e mensal',
+    payroll: 'Até 10 funcionários',
+    financial: 'Gestão de contas a pagar e receber',
+    reports: 'DRE mensal',
+    planning: '—',
+    taxReform: 'Diagnóstico',
+    portal: '✓ Incluso',
+    features: [
+      { label: 'Gestão Fiscal', detail: 'Completa e apurações mensais', included: true },
+      { label: 'Escrituração contábil', detail: 'Completa e mensal', included: true },
+      { label: 'Folha de pagamento', detail: 'Até 10 funcionários inclusos', included: true },
+      { label: 'Gestão financeira (pagar e receber)', detail: 'Acompanhamento de pagar e receber', included: true },
+      { label: 'Relatórios gerenciais', detail: 'DRE mensal detalhada', included: true },
+      { label: 'Planejamento e controladoria', detail: 'Não incluso', included: false },
+      { label: 'Reforma Tributária', detail: 'Diagnóstico personalizado da sua operação', included: true },
+      { label: 'App e portal', detail: 'Acesso web e app integrado', included: true },
+    ],
+  },
+  {
+    id: 'performance',
+    name: 'Performance',
+    icon: 'building',
+    profile: 'Médias e grupos',
+    audience: 'Para médias empresas e grupos com gestão ativa',
+    ctaText: 'Falar com um especialista',
+    ctaMessage: 'Olá! Tenho interesse no plano Performance da Conceito e gostaria de falar com um especialista.',
+    support: 'Contador + reunião mensal',
+    fiscal: 'Gestão fiscal completa',
+    accounting: 'Completa e mensal',
+    payroll: 'Sob medida',
+    financial: 'Gestão de contas a pagar e receber',
+    reports: 'DRE + indicadores',
+    planning: 'Planejamento e controladoria',
+    taxReform: 'Plano de transição',
+    portal: '✓ Incluso',
+    features: [
+      { label: 'Gestão Fiscal', detail: 'Completa e apurações complexas', included: true },
+      { label: 'Escrituração contábil', detail: 'Completa e mensal', included: true },
+      { label: 'Folha de pagamento', detail: 'Dimensionada sob medida', included: true },
+      { label: 'Gestão financeira (pagar e receber)', detail: 'Acompanhamento de pagar e receber', included: true },
+      { label: 'Relatórios gerenciais', detail: 'DRE + indicadores de desempenho', included: true },
+      { label: 'Planejamento e controladoria', detail: 'Planejamento orçamentário e estratégico', included: true },
+      { label: 'Reforma Tributária', detail: 'Plano de transição estruturado', included: true },
+      { label: 'App e portal', detail: 'Acesso web e app integrado', included: true },
+    ],
+  },
+]
+
+const WIDE_PLAN: PlanItem = {
+  id: 'conceito-360',
+  name: 'Conceito 360',
+  badge: 'Solução Completa · Grandes Empresas',
+  icon: 'shield-check',
+  profile: 'Grandes empresas',
+  audience: 'Para grandes empresas e grupos corporativos que exigem gestão de ponta a ponta',
+  ctaText: 'Fale com a gente',
+  ctaMessage: 'Olá! Tenho interesse no plano Conceito 360 da Conceito e gostaria de falar com a equipe.',
+  support: 'Equipe dedicada + reuniões',
+  fiscal: 'Gestão fiscal completa',
+  accounting: 'Completa e mensal',
+  payroll: 'Sob medida',
+  financial: 'BPO completo',
+  reports: 'Dashboard em tempo real',
+  planning: 'Planejamento e controladoria',
+  taxReform: 'Plano de transição',
+  portal: '✓ Incluso',
+  credit: 'Análise de crédito, régua de cobrança, boletos, inadimplência e conciliação + captação de crédito bancário',
+  features: [
+    { label: 'Gestão Fiscal', detail: 'Completa e mensal', included: true },
+    { label: 'Escrituração contábil', detail: 'Completa e mensal', included: true },
+    { label: 'Folha de pagamento', detail: 'Sob medida para a operação', included: true },
+    { label: 'Gestão financeira', detail: 'BPO financeiro completo (pagar e receber)', included: true, highlight: true },
+    { label: 'Relatórios gerenciais', detail: 'Dashboard em tempo real', included: true, highlight: true },
+    { label: 'Planejamento e controladoria', detail: 'Controladoria estratégica ativa', included: true },
+    { label: 'Crédito e cobrança', detail: 'Análise, régua de cobrança, boletos + captação bancária', included: true, highlight: true },
+    { label: 'Reforma Tributária', detail: 'Plano de transição estruturado', included: true },
+    { label: 'App e portal', detail: 'Acesso web e app integrado', included: true },
+    { label: 'Atendimento', detail: 'Equipe dedicada + reuniões periódicas', included: true },
+  ],
+  columns: [
+    {
+      title: 'Fiscal, Contábil & Folha',
+      items: [
+        'Gestão fiscal completa e apuração mensal',
+        'Escrituração contábil completa e mensal',
+        'Folha de pagamento sob medida para a empresa',
+        'Reforma Tributária: plano de transição estruturado',
+      ],
+    },
+    {
+      title: 'Financeiro & Controladoria',
+      items: [
+        'BPO financeiro completo (contas a pagar e receber)',
+        'Dashboard gerencial em tempo real',
+        'Planejamento orçamentário e controladoria',
+        'App e portal do cliente com múltiplos acessos',
+      ],
+    },
+    {
+      title: 'Crédito e Cobrança (Duas frentes)',
+      items: [
+        'Crédito e cobrança dos clientes: análise pré-venda, régua de cobrança, boletos, controle de inadimplência e conciliação',
+        'Crédito para a empresa: apoio na captação bancária, demonstrativos exigidos e análise de linhas de crédito',
+      ],
+    },
+  ],
+}
+
 /**
- * Planos (sem preço no site: o valor é combinado depois de uma conversa).
- * `features`: o que cada plano inclui, na ordem dos planos [Essencial, Crescimento, Estratégico].
+ * Estrutura dos 5 planos (Linha Jornada) baseada na planilha oficial:
+ * 1. Largada (MEI) - Faixa acima dos cards
+ * 2. Base (Simples / pequenas) - Card
+ * 3. Impulso ⭐ (Simples e Presumido em expansão) - Card (destaque)
+ * 4. Performance (Médias e grupos) - Card
+ * 5. Conceito 360 (Grandes empresas) - Card largo abaixo dos cards
  */
 export const PLANS = {
-  tiers: [
-    { id: 'essencial', name: 'Essencial', icon: 'store', profile: 'Sou MEI ou estou começando', audience: 'Para MEI e pequenas empresas', support: 'Atendimento digital pelo app e WhatsApp', featured: false },
-    { id: 'crescimento', name: 'Crescimento', icon: 'bar-chart', profile: 'Minha empresa está crescendo', audience: 'Para empresas em expansão', support: 'Contador dedicado à sua empresa', featured: true },
-    { id: 'estrategico', name: 'Estratégico', icon: 'building', profile: 'Tenho uma empresa média ou grupo', audience: 'Para médias empresas e grupos', support: 'Reuniões estratégicas de acompanhamento', featured: false },
-  ],
-  features: [
-    { label: 'Contabilidade e impostos em dia', values: [true, true, true] },
-    { label: 'App e portal do cliente', values: [true, true, true] },
-    { label: 'Gestão financeira (contas a pagar e a receber)', values: [false, true, true] },
-    { label: 'Planejamento e controladoria', values: [false, false, true] },
-  ],
+  strip: STRIP_PLAN,
+  grid: GRID_PLANS,
+  wide: WIDE_PLAN,
+  all: [STRIP_PLAN, ...GRID_PLANS, WIDE_PLAN],
+  extraNote: 'Adicionais em qualquer plano: folha de pagamento, certificado digital, abertura de empresa, registro de marca, BPO financeiro completo e IR dos sócios.',
+  // Retrocompatibilidade
+  tiers: [STRIP_PLAN, ...GRID_PLANS, WIDE_PLAN],
 }
 
 /** Dúvidas frequentes, em linguagem simples e agrupadas por assunto. */
 export const FAQ_CATEGORIES = ['Começar', 'Custos', 'Atendimento', 'Impostos'] as const
 export const FAQ: { cat: (typeof FAQ_CATEGORIES)[number]; q: string; a: string }[] = [
-  { cat: 'Começar', q: 'Posso trocar de contador a qualquer momento?', a: 'Sim. Nós cuidamos da conversa com o seu contador atual e da transferência dos documentos. Você não precisa se preocupar com nada e a sua empresa não para.' },
-  { cat: 'Começar', q: 'Vocês abrem empresa do zero?', a: 'Sim. Indicamos o formato mais vantajoso para o seu negócio e cuidamos de todo o registro: CNPJ, alvarás e inscrições. Você só confere e assina.' },
+  { cat: 'Começar', q: 'Posso trocar de contador a qualquer momento?', a: 'Sim. A Conceito conversa com o seu contador atual, recebe os documentos e cuida de toda a transição. Sua empresa não para e você não precisa se preocupar com nada. Só vale conferir o prazo de aviso do contrato atual, que a gente ajuda a ver.' },
+  { cat: 'Começar', q: 'Vocês abrem empresa do zero?', a: 'Sim. Ajudamos a escolher o tipo de empresa e o regime de impostos que fazem você pagar menos, e cuidamos de todo o registro até o CNPJ ficar pronto para emitir nota.' },
   { cat: 'Começar', q: 'Sou MEI. Preciso de contador?', a: 'O MEI não é obrigado a ter contador, mas a ajuda evita erros nas guias e na declaração anual — e mostra a hora certa de deixar de ser MEI quando a empresa cresce.' },
   { cat: 'Custos', q: 'Quanto custa?', a: 'Depende do tamanho e da rotina da sua empresa. Depois de uma conversa rápida, enviamos uma proposta clara, com tudo o que está incluso e sem custos escondidos.' },
   { cat: 'Custos', q: 'Vou pagar por serviço que não uso?', a: 'Não. Os planos são montados de acordo com a sua empresa: você contrata só o que faz sentido e pode incluir outros serviços quando precisar.' },
-  { cat: 'Atendimento', q: 'Preciso ir até o escritório?', a: 'Não é necessário. Você resolve tudo pelo app, pelo portal ou pelo WhatsApp. Se preferir conversar pessoalmente, nosso escritório fica em Palmeira dos Índios/AL.' },
+  { cat: 'Atendimento', q: 'Preciso ir até o escritório?', a: 'Não precisa, mas pode. Você resolve tudo pelo app, pelo portal do cliente ou pelo WhatsApp, de onde estiver. Se preferir conversar pessoalmente, é só agendar um horário em uma das nossas unidades. Vai ser um prazer receber você para um café.' },
   { cat: 'Atendimento', q: 'Preciso instalar algum sistema?', a: 'Não. Você usa o nosso app no celular ou o portal web direto no navegador, a qualquer hora.' },
   { cat: 'Atendimento', q: 'Com quem eu vou falar?', a: 'Com a nossa equipe — sempre as mesmas pessoas. Você sabe quem cuida da sua empresa e tem um canal direto com elas.' },
   { cat: 'Impostos', q: 'Vocês me ajudam a pagar menos imposto?', a: 'Sim, sempre dentro da lei. Revisamos o regime e a atividade da sua empresa para que você não pague nada além do necessário.' },
